@@ -23,7 +23,7 @@ jobs:
       - name: Descomprimir proyecto
         run: |
           unzip -o GamepadAndroidNative_v2.zip -d proyecto
-          find proyecto -maxdepth 4 -type f | head -80
+          find proyecto -maxdepth 4 -type f | head -80- name: Buscar proyecto Android
 
       - name: Buscar proyecto Android
         run: |
