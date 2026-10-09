@@ -1,3 +1,4 @@
+
 name: Build GAMEPAD ANDROID APK
 
 'on':
@@ -30,6 +31,13 @@ jobs:
 
       - name: Descomprimir proyecto
         run: unzip -o GamepadAndroidNative_v2.zip -d proyecto
+
+      - name: Corregir compatibilidad Java y Kotlin
+        working-directory: proyecto/GamepadAndroidNative_v2
+        run: |
+          sed -i 's/jvmTarget = "1.8"/jvmTarget = "17"/g' app/build.gradle.kts
+          sed -i 's/JVM_1_8/JVM_17/g' app/build.gradle.kts
+          sed -i 's/JavaVersion.VERSION_1_8/JavaVersion.VERSION_17/g' app/build.gradle.kts
 
       - name: Compilar APK
         working-directory: proyecto/GamepadAndroidNative_v2
