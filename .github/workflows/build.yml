@@ -1,35 +1,34 @@
 name: Build GAMEPAD ANDROID APK
 
 "on":
-  workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/build.yml'
+workflow_dispatch: {}
+push:
+paths:
+- ".github/workflows/build.yml"
 
 jobs:
-  build:
-   container: runs-on: ubuntu-latest
-
+build:
+runs-on: ubuntu-latest
 steps:
-  - name: Descargar repositori deo
-    uses: actions/checkout@v4
+- name: Descargar repositorio
+uses: actions/checkout@v4
 
   - name: Preparar Java
     uses: actions/setup-java@v4
     with:
       distribution: temurin
-      java-version: '17'
+      java-version: "17"
 
   - name: Descomprimir proyecto
     run: |
       unzip -o GamepadAndroidNative_v2.zip -d proyecto
       test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
+      test -f proyecto/GamepadAndroidNative_v2/gradlew
 
   - name: Preparar Gradle
     run: |
       cd proyecto/GamepadAndroidNative_v2
       chmod +x gradlew
-      sed -i 's/1\.8/17/g' app/build.gradle.kts
 
   - name: Compilar APK
     run: |
