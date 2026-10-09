@@ -1,6 +1,6 @@
 name: Build GAMEPAD ANDROID APK
 
-'on':
+"on":
 workflow_dispatch:
 push:
 paths:
@@ -23,19 +23,18 @@ steps:
   - name: Descomprimir proyecto
     run: |
       unzip -o GamepadAndroidNative_v2.zip -d proyecto
+      test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
 
   - name: Preparar Gradle
     run: |
-      wget https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O "$RUNNER_TEMP/gradle.zip"
-      unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+      cd proyecto/GamepadAndroidNative_v2
+      chmod +x gradlew
+      sed -i 's/1\.8/17/g' app/build.gradle.kts
 
   - name: Compilar APK
     run: |
-      "$RUNNER_TEMP/gradle-8.11.1/bin/gradle" \
-        -p proyecto/GamepadAndroidNative_v2 \
-        --no-daemon \
-        -Pkotlin.jvm.target.validation.mode=warning \
-        assembleDebug
+      cd proyecto/GamepadAndroidNative_v2
+      ./gradlew --no-daemon assembleDebug
 
   - name: Guardar APK
     uses: actions/upload-artifact@v4
