@@ -1,41 +1,42 @@
+
 name: Build GAMEPAD ANDROID APK
 
 on:
-workflow_dispatch:
-push:
-paths:
-- '.github/workflows/build.yml'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build.yml'
 
 jobs:
-build:
-runs-on: ubuntu-latest
-steps:
-- name: Descargar repositorio
-uses: actions/checkout@v4
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
 
-  - name: Preparar Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-  - name: Descomprimir proyecto
-    run: |
-      unzip -o GamepadAndroidNative_v2.zip -d proyecto
-      find proyecto -maxdepth 4 -type f | head -80
+      - name: Descomprimir proyecto
+        run: |
+          unzip -o GamepadAndroidNative_v2.zip -d proyecto
+          find proyecto -maxdepth 4 -type f | head -80
 
-  - name: Buscar proyecto Android
-    run: |
-      find proyecto -name gradlew -exec chmod +x {} \;
-      test -n "$(find proyecto -name gradlew -print -quit)"
+      - name: Buscar proyecto Android
+        run: |
+          find proyecto -name gradlew -exec chmod +x {} \;
+          test -n "$(find proyecto -name gradlew -print -quit)"
 
-  - name: Compilar APK
-    run: |
-      cd "$(dirname "$(find "$GITHUB_WORKSPACE/proyecto" -name gradlew -print -quit)")"
-      ./gradlew assembleDebug
+      - name: Compilar APK
+        run: |
+          cd "$(dirname "$(find proyecto -name gradlew -print -quit)")"
+          ./gradlew assembleDebug
 
-  - name: Guardar APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: GAMEPAD-ANDROID-APK
-      path: proyecto/**/build/outputs/apk/debug/*.apk
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GAMEPAD-ANDROID-APK
+          path: proyecto/**/build/outputs/apk/debug/*.apk
