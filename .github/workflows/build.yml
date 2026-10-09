@@ -1,14 +1,14 @@
 name: Build GAMEPAD ANDROID APK
 
 "on":
-workflow_dispatch:
-push:
-paths:
-- '.github/workflows/build.yml'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build.yml'
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+   container: runs-on: ubuntu-latest
 
 steps:
   - name: Descargar repositorio
