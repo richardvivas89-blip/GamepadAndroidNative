@@ -1,43 +1,44 @@
-
 name: Build GAMEPAD ANDROID APK
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/build.yml'
+workflow_dispatch:
+push:
+paths:
+- '.github/workflows/build.yml'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
+build:
+runs-on: ubuntu-latest
 
-      - name: Preparar Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+steps:
+  - name: Descargar repositorio
+    uses: actions/checkout@v4
 
-      - name: Descomprimir proyecto
-        run: |
-          unzip -o GamepadAndroidNative_v2.zip -d proyecto
-          find proyecto -maxdepth 4 -type f | head -80
+  - name: Preparar Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Buscar proyecto Android
-        run: |
-          find proyecto -type f -name gradlew
-          test -f proyecto/GamepadAndroidNative_v2/gradlew
-          chmod +x proyecto/GamepadAndroidNative_v2/gradlew
+  - name: Descomprimir proyecto
+    run: |
+      unzip -o GamepadAndroidNative_v2.zip -d proyecto
+      test -f proyecto/GamepadAndroidNative_v2/settings.gradle.kts
 
-      - name: Compilar APK
-        run: |
-          cd "$(dirname "$(find proyecto -name gradlew -print -quit)")"
-          ./gradlew assembleDebug
+  - name: Preparar Gradle
+    run: |
+      wget https://services.gradle.org/distributions/gradle-8.9-bin.zip -O "$RUNNER_TEMP/gradle.zip"
+      unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
 
-      - name: Guardar APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: GAMEPAD-ANDROID-APK
-          path: proyecto/**/build/outputs/apk/debug/*.apk
+  - name: Compilar APK
+    run: |
+      "$RUNNER_TEMP/gradle-8.9/bin/gradle" \
+        -p proyecto/GamepadAndroidNative_v2 \
+        --no-daemon assembleDebug
+
+  - name: Guardar APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: GAMEPAD-ANDROID-APK
+      path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/*.apk
+      if-no-files-found: error
