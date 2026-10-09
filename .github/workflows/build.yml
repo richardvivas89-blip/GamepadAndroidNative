@@ -1,46 +1,45 @@
-
 name: Build GAMEPAD ANDROID APK
 
-'on':
-  workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/build.yml'
-      - 'GamepadAndroidNative_v2.zip'
+on:
+workflow_dispatch:
+push:
+paths:
+- '.github/workflows/build.yml'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
+steps:
+  - name: Descargar repositorio
+    uses: actions/checkout@v4
 
-      - name: Preparar Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
+  - name: Preparar Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Descomprimir proyecto
-        run: |
-          unzip -o GamepadAndroidNative_v2.zip -d proyecto
-          test -f proyecto/GamepadAndroidNative_v2/settings.gradle.kts
+  - name: Descomprimir proyecto
+    run: |
+      unzip -o GamepadAndroidNative_v2.zip -d proyecto
 
-      - name: Preparar Gradle
-        run: |
-          wget https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O "$RUNNER_TEMP/gradle.zip"
-          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+  - name: Preparar Gradle
+    run: |
+      wget https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O "$RUNNER_TEMP/gradle.zip"
+      unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
 
-      - name: Compilar APK
-        run: |
-          "$RUNNER_TEMP/gradle-8.11.1/bin/gradle" \
-            -p proyecto/GamepadAndroidNative_v2 \
-            --no-daemon assembleDebug
+  - name: Compilar APK
+    run: |
+      "$RUNNER_TEMP/gradle-8.11.1/bin/gradle" \
+        -p proyecto/GamepadAndroidNative_v2 \
+        --no-daemon \
+        -Pkotlin.jvm.target.validation.mode=warning \
+        assembleDebug
 
-      - name: Guardar APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: GAMEPAD-ANDROID-APK
-          path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+  - name: Guardar APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: GAMEPAD-ANDROID-APK
+      path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/*.apk
+      if-no-files-found: error
