@@ -27,8 +27,9 @@ jobs:
 
       - name: Buscar proyecto Android
         run: |
-          find proyecto -name gradlew -exec chmod +x {} \;
-          test -n "$(find proyecto -name gradlew -print -quit)"
+          find proyecto -type f -name gradlew
+          test -f proyecto/GamepadAndroidNative_v2/gradlew
+          chmod +x proyecto/GamepadAndroidNative_v2/gradlew
 
       - name: Compilar APK
         run: |
