@@ -29,12 +29,12 @@ jobs:
 
       - name: Preparar Gradle
         run: |
-          wget https://services.gradle.org/distributions/gradle-8.9-bin.zip -O "$RUNNER_TEMP/gradle.zip"
+          wget https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O "$RUNNER_TEMP/gradle.zip"
           unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
 
       - name: Compilar APK
         run: |
-          "$RUNNER_TEMP/gradle-8.9/bin/gradle" \
+          "$RUNNER_TEMP/gradle-8.11.1/bin/gradle" \
             -p proyecto/GamepadAndroidNative_v2 \
             --no-daemon assembleDebug
 
