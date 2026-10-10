@@ -1,3 +1,4 @@
+
 name: Build GAMEPAD ANDROID APK
 
 'on':
@@ -29,15 +30,17 @@ jobs:
           gradle-version: '8.11.1'
 
       - name: Comprobar ZIP corregido
-        run: |
-          test -f GAMEPAD_ANDROID_version_corregida_2.zip
+        run: test -f GAMEPAD_ANDROID_version_corregida_2.zip
 
       - name: Descomprimir proyecto corregido
-        run: 
-u
+        run: |
+          mkdir -p proyecto
+          unzip -o GAMEPAD_ANDROID_version_corregida_2.zip -d proyecto
+
       - name: Comprobar archivos del proyecto
-        run: unzip -o GAMEPAD_ANDROID_version_corregida_2.zip -d proyecto
+        run: |
           find proyecto -name build.gradle.kts -print
+          test -d proyecto/GamepadAndroidNative_v2
 
       - name: Compilar APK
         working-directory: proyecto/GamepadAndroidNative_v2
