@@ -30,13 +30,13 @@ jobs:
 
       - name: Comprobar ZIP corregido
         run: |
-          test -f GamepadAndroidNative_v2_fixed_alertdialog.zip
+          test -f GAMEPAD_ANDROID_version_corregida_2.zip
 
       - name: Descomprimir proyecto corregido
-        run: unzip -o GamepadAndroidNative_v2_java17_fixed.zip -d proyecto
-
+        run: 
+u
       - name: Comprobar archivos del proyecto
-        run: |
+        run: unzip -o GAMEPAD_ANDROID_version_corregida_2.zip -d proyecto
           find proyecto -name build.gradle.kts -print
 
       - name: Compilar APK
