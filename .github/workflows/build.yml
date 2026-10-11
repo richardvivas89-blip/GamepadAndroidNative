@@ -28,27 +28,27 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP corregido
-        run: test -f GAMEPAD_ANDROID_version_corregida_3.zip
+      - name: Comprobar ZIP v04
+        run: test -f GamepadAndroid_codigo_nuevo_v04.zip
 
-      - name: Descomprimir proyecto corregido
+      - name: Descomprimir proyecto v04
         run: |
           mkdir -p proyecto
-          unzip -o GAMEPAD_ANDROID_version_corregida_3.zip -d proyecto
+          unzip -o GamepadAndroid_codigo_nuevo_v04.zip -d proyecto
 
-      - name: Comprobar archivos del proyecto
+      - name: Localizar proyecto Android
         run: |
           find proyecto -name build.gradle.kts -print
           test -d proyecto/GamepadAndroidNative_v2
 
-      - name: Compilar APK
+      - name: Compilar APK v04
         working-directory: proyecto/GamepadAndroidNative_v2
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK
+      - name: Guardar APK v04
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-APK
+          name: GAMEPAD-ANDROID-APK-v04
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
