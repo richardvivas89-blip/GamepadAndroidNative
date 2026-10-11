@@ -1,4 +1,4 @@
-name: Build GAMEPAD ANDROID HID DIAGNOSTICO
+name: Build GAMEPAD ANDROID HID v05
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID diagnóstico
-        run: test -f GamepadAndroid_HID_diagnostico_v04.zip
+      - name: Comprobar ZIP HID v05
+        run: test -f GamepadAndroid_HID_gamepad_v05_fuente.zip
 
-      - name: Descomprimir proyecto HID diagnóstico
+      - name: Descomprimir proyecto HID v05
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_diagnostico_v04.zip -d proyecto
+          unzip -o GamepadAndroid_HID_gamepad_v05_fuente.zip -d proyecto
 
       - name: Comprobar estructura Android
         run: |
@@ -42,14 +42,14 @@ jobs:
           test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
           test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
 
-      - name: Compilar APK HID diagnóstico
+      - name: Compilar APK HID v05
         working-directory: proyecto/GamepadAndroidNative_v2
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK HID diagnóstico
+      - name: Guardar APK HID v05
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-DIAGNOSTICO-v04
+          name: GAMEPAD-ANDROID-HID-v05
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
