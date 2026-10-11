@@ -1,4 +1,4 @@
-name: Build GAMEPAD ANDROID HID v11 SEGUNDO PLANO
+name: Build GAMEPAD ANDROID HID v11 EDITOR Y PERFILES
 
 on:
   workflow_dispatch:
@@ -29,12 +29,12 @@ jobs:
           gradle-version: '8.11.1'
 
       - name: Comprobar ZIP HID v11
-        run: test -f GamepadAndroid_HID_v11_segundo_plano_fuente.zip
+        run: test -f GamepadAndroid_HID_v11_editor_perfiles_fuente.zip
 
       - name: Descomprimir proyecto HID v11
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v11_segundo_plano_fuente.zip -d proyecto
+          unzip -o GamepadAndroid_HID_v11_editor_perfiles_fuente.zip -d proyecto
 
       - name: Comprobar estructura Android
         run: |
@@ -49,7 +49,7 @@ jobs:
       - name: Guardar APK HID v11
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-v11-SEGUNDO-PLANO
+          name: GAMEPAD-ANDROID-HID-v11-EDITOR-PERFILES
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
