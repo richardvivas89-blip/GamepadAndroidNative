@@ -1,55 +1,55 @@
 name: Build GAMEPAD ANDROID HID DIAGNOSTICO
 
 on:
-workflow_dispatch:
-push:
-branches:
-- main
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
-contents: read
+  contents: read
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Descargar repositorio
-    uses: actions/checkout@v4
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
 
-  - name: Preparar Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-  - name: Preparar Gradle
-    uses: gradle/actions/setup-gradle@v4
-    with:
-      gradle-version: '8.11.1'
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
 
-  - name: Comprobar ZIP HID diagnóstico
-    run: test -f GamepadAndroid_HID_diagnostico_v04.zip
+      - name: Comprobar ZIP HID diagnóstico
+        run: test -f GamepadAndroid_HID_diagnostico_v04.zip
 
-  - name: Descomprimir proyecto HID diagnóstico
-    run: |
-      mkdir -p proyecto
-      unzip -o GamepadAndroid_HID_diagnostico_v04.zip -d proyecto
+      - name: Descomprimir proyecto HID diagnóstico
+        run: |
+          mkdir -p proyecto
+          unzip -o GamepadAndroid_HID_diagnostico_v04.zip -d proyecto
 
-  - name: Comprobar estructura Android
-    run: |
-      test -f proyecto/GamepadAndroidNative_v2/settings.gradle.kts
-      test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
-      test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
+      - name: Comprobar estructura Android
+        run: |
+          test -f proyecto/GamepadAndroidNative_v2/settings.gradle.kts
+          test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
+          test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
 
-  - name: Compilar APK HID diagnóstico
-    working-directory: proyecto/GamepadAndroidNative_v2
-    run: gradle --no-daemon assembleDebug
+      - name: Compilar APK HID diagnóstico
+        working-directory: proyecto/GamepadAndroidNative_v2
+        run: gradle --no-daemon assembleDebug
 
-  - name: Guardar APK HID diagnóstico
-    uses: actions/upload-artifact@v4
-    with:
-      name: GAMEPAD-ANDROID-HID-DIAGNOSTICO-v04
-      path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
-      if-no-files-found: error
-      retention-days: 14
+      - name: Guardar APK HID diagnóstico
+        uses: actions/upload-artifact@v4
+        with:
+          name: GAMEPAD-ANDROID-HID-DIAGNOSTICO-v04
+          path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
