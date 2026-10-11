@@ -1,4 +1,4 @@
-name: Build GAMEPAD ANDROID HID v14 EDITOR FLOTANTE
+name: Build GAMEPAD ANDROID HID v15 EDICION EN VIVO
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID v14
-        run: test -f GamepadAndroid_HID_v14_editor_flotante_arrastre_fuente.zip
+      - name: Comprobar ZIP HID v15
+        run: test -f GamepadAndroid_HID_v15_edicion_en_vivo_fuente.zip
 
-      - name: Descomprimir proyecto HID v14
+      - name: Descomprimir proyecto HID v15
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v14_editor_flotante_arrastre_fuente.zip -d proyecto
+          unzip -o GamepadAndroid_HID_v15_edicion_en_vivo_fuente.zip -d proyecto
 
       - name: Comprobar estructura Android
         run: |
@@ -42,14 +42,14 @@ jobs:
           test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
           test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
 
-      - name: Compilar APK HID v14
+      - name: Compilar APK HID v15
         working-directory: proyecto/GamepadAndroidNative_v2
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK HID v14
+      - name: Guardar APK HID v15
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-v14-EDITOR-FLOTANTE
+          name: GAMEPAD-ANDROID-HID-v15-EDICION-EN-VIVO
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
