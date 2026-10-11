@@ -1,4 +1,4 @@
-name: Build GAMEPAD ANDROID HID v18 LAYOUT ADAPTATIVO
+name: Build GAMEPAD ANDROID HID v19 CONFIGURACION LIMPIA
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID v18
-        run: test -f GamepadAndroid_HID_v18_layout_adaptativo_fuente.zip
+      - name: Comprobar ZIP HID v19
+        run: test -f GamepadAndroid_HID_v19_configuracion_limpia_editor_en_vivo_fuente.zip
 
-      - name: Descomprimir proyecto HID v18
+      - name: Descomprimir proyecto HID v19
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v18_layout_adaptativo_fuente.zip -d proyecto
+          unzip -o GamepadAndroid_HID_v19_configuracion_limpia_editor_en_vivo_fuente.zip -d proyecto
 
       - name: Comprobar estructura Android
         run: |
@@ -42,14 +42,14 @@ jobs:
           test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
           test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
 
-      - name: Compilar APK HID v18
+      - name: Compilar APK HID v19
         working-directory: proyecto/GamepadAndroidNative_v2
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK HID v18
+      - name: Guardar APK HID v19
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-v18-LAYOUT-ADAPTATIVO
+          name: GAMEPAD-ANDROID-HID-v19-CONFIGURACION-LIMPIA
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
