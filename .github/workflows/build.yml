@@ -1,4 +1,4 @@
-name: Build GAMEPAD ANDROID HID v13 PSP CONFIGURACION AVANZADA
+name: Build GAMEPAD ANDROID HID v14 EDITOR FLOTANTE
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID v13
-        run: test -f GamepadAndroid_HID_v13_PSP_configuracion_avanzada_fuente.zip
+      - name: Comprobar ZIP HID v14
+        run: test -f GamepadAndroid_HID_v14_editor_flotante_arrastre_fuente.zip
 
-      - name: Descomprimir proyecto HID v13
+      - name: Descomprimir proyecto HID v14
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v13_PSP_configuracion_avanzada_fuente.zip -d proyecto
+          unzip -o GamepadAndroid_HID_v14_editor_flotante_arrastre_fuente.zip -d proyecto
 
       - name: Comprobar estructura Android
         run: |
@@ -42,14 +42,14 @@ jobs:
           test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
           test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
 
-      - name: Compilar APK HID v13
+      - name: Compilar APK HID v14
         working-directory: proyecto/GamepadAndroidNative_v2
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK HID v13
+      - name: Guardar APK HID v14
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-v13-PSP-CONFIGURACION-AVANZADA
+          name: GAMEPAD-ANDROID-HID-v14-EDITOR-FLOTANTE
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
