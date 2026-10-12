@@ -1,4 +1,4 @@
-name: Build GAMEPAD ANDROID HID v23 EDITOR LIBRE Y RECONEXION
+name: Build GAMEPAD ANDROID HID v24 CONTROLES PERSONALIZADOS
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID v23
-        run: test -f GamepadAndroid_HID_v23_editor_libre_reconexion_fuente.zip
+      - name: Comprobar ZIP HID v24
+        run: test -f GamepadAndroid_HID_v24_controles_personalizados_fuente.zip
 
-      - name: Descomprimir proyecto HID v23
+      - name: Descomprimir proyecto HID v24
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v23_editor_libre_reconexion_fuente.zip -d proyecto
+          unzip -o GamepadAndroid_HID_v24_controles_personalizados_fuente.zip -d proyecto
 
       - name: Comprobar estructura Android
         run: |
@@ -42,14 +42,14 @@ jobs:
           test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
           test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
 
-      - name: Compilar APK HID v23
+      - name: Compilar APK HID v24
         working-directory: proyecto/GamepadAndroidNative_v2
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK HID v23
+      - name: Guardar APK HID v24
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-v23-EDITOR-LIBRE-RECONEXION
+          name: GAMEPAD-ANDROID-HID-v24-CONTROLES-PERSONALIZADOS
           path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
