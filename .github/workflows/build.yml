@@ -1,75 +1,52 @@
-name: Build GAMEPAD ANDROID WiFi v24
+name: Build GAMEPAD ANDROID APK
 
 'on':
-workflow_dispatch:
-push:
-branches:
-- main
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
-contents: real concurrency:
+  contents: read
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Descargar repositorio
-    uses: actions/checkout@v4
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
 
-  - name: Preparar Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-  - name: Preparar Gradle
-    uses: gradle/actions/setup-gradle@v4
-    with:
-      gradle-version: '8.11.1'
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
 
-  - name: Comprobar ZIP WiFi v24
-    run: test -f GamepadAndroid_HID_v24_WIFI_experimental_fuente.zip
+      - name: Comprobar ZIP corregido
+        run: |
+          test -f GamepadAndroidNative_v2_fixed_alertdialog.zip
 
-  - name: Descomprimir proyecto WiFi v24
-    run: |
-      mkdir -p proyecto
-      unzip -o GamepadAndroid_HID_v24_WIFI_experimental_fuente.zip -d proyecto
+      - name: Descomprimir proyecto corregido
+        run: unzip -o GamepadAndroidNative_v2_fixed_alertdialog.zip -d proyecto
 
-  - name: Detectar proyecto Android
-    run: |
-      SETTINGS_FILE="$(find proyecto -name settings.gradle.kts -type f -print -quit)"
+      - name: Comprobar archivos del proyecto
+        run: |
+          find proyecto -name build.gradle.kts -print
 
-      if [ -z "$SETTINGS_FILE" ]; then
-        echo "::error::No se encontró settings.gradle.kts en el ZIP v24"
-        exit 1
-      fi
+      - name: Compilar APK
+        working-directory: proyecto/GamepadAndroidNative_v2
+        run: gradle --no-daemon assembleDebug
 
-      PROJECT_DIR="$(dirname "$SETTINGS_FILE")"
-
-      if [ ! -f "$PROJECT_DIR/app/build.gradle.kts" ]; then
-        echo "::error::No se encontró app/build.gradle.kts"
-        exit 1
-      fi
-
-      MAIN_ACTIVITY="$(find "$PROJECT_DIR/app/src/main" -name MainActivity.kt -type f -print -quit)"
-
-      if [ -z "$MAIN_ACTIVITY" ]; then
-        echo "::error::No se encontró MainActivity.kt"
-        exit 1
-      fi
-
-      echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-      echo "Proyecto detectado: $PROJECT_DIR"
-      echo "Actividad principal: $MAIN_ACTIVITY"
-
-  - name: Compilar APK WiFi v24
-    run: gradle --no-daemon -p "$PROJECT_DIR" assembleDebug
-
-  - name: Guardar APK WiFi v24
-    uses: actions/upload-artifact@v4
-    with:
-      name: GAMEPAD-ANDROID-WIFI-v24
-      path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/app-debug.apk
-      if-no-files-found: error
-      retention-days: 14
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GAMEPAD-ANDROID-APK
+          path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
