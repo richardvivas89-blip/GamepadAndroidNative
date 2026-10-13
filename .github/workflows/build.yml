@@ -7,7 +7,7 @@ branches:
 - main
 
 permissions:
-contents: rea concurrency:
+contents: real concurrency:
 
 jobs:
 build:
