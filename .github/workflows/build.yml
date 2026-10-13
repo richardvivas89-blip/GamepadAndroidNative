@@ -1,6 +1,6 @@
 name: Build GAMEPAD ANDROID WiFi v24
 
-on:
+'on':
 workflow_dispatch:
 push:
 branches:
