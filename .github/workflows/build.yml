@@ -1,4 +1,5 @@
-name: Build GAMEPAD ANDROID HID v24 CONTROLES PERSONALIZADOS
+
+name: Build GAMEPAD ANDROID HID v25
 
 on:
   workflow_dispatch:
@@ -28,28 +29,43 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID v24
-        run: test -f GamepadAndroid_HID_v24_controles_personalizados_fuente.zip
+      - name: Comprobar ZIP HID v25
+        run: test -f GamepadAndroid_HID_v25_fuente.zip
 
-      - name: Descomprimir proyecto HID v24
+      - name: Descomprimir proyecto v25
         run: |
           mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v24_controles_personalizados_fuente.zip -d proyecto
+          unzip -o GamepadAndroid_HID_v25_fuente.zip -d proyecto
 
-      - name: Comprobar estructura Android
+      - name: Detectar proyecto Android
         run: |
-          test -f proyecto/GamepadAndroidNative_v2/settings.gradle.kts
-          test -f proyecto/GamepadAndroidNative_v2/app/build.gradle.kts
-          test -f proyecto/GamepadAndroidNative_v2/app/src/main/java/com/example/gamepadandroid/MainActivity.kt
+          SETTINGS_FILE="$(find proyecto -name settings.gradle.kts -type f -print -quit)"
+          if [ -z "$SETTINGS_FILE" ]; then
+            echo "::error::No se encontró settings.gradle.kts en el ZIP v25"
+            exit 1
+          fi
 
-      - name: Compilar APK HID v24
-        working-directory: proyecto/GamepadAndroidNative_v2
-        run: gradle --no-daemon assembleDebug
+          PROJECT_DIR="$(dirname "$SETTINGS_FILE")"
 
-      - name: Guardar APK HID v24
+          test -f "$PROJECT_DIR/app/build.gradle.kts"
+
+          MAIN_ACTIVITY="$(find "$PROJECT_DIR/app/src/main" -name MainActivity.kt -type f -print -quit)"
+          if [ -z "$MAIN_ACTIVITY" ]; then
+            echo "::error::No se encontró MainActivity.kt"
+            exit 1
+          fi
+
+          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+          echo "Proyecto detectado: $PROJECT_DIR"
+          echo "Actividad principal: $MAIN_ACTIVITY"
+
+      - name: Compilar APK HID v25
+        run: gradle --no-daemon -p "$PROJECT_DIR" assembleDebug
+
+      - name: Guardar APK HID v25
         uses: actions/upload-artifact@v4
         with:
-          name: GAMEPAD-ANDROID-HID-v24-CONTROLES-PERSONALIZADOS
-          path: proyecto/GamepadAndroidNative_v2/app/build/outputs/apk/debug/app-debug.apk
+          name: GAMEPAD-ANDROID-HID-v25
+          path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
