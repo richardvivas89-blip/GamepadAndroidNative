@@ -1,71 +1,75 @@
-
-name: Build GAMEPAD ANDROID HID v25
+name: Build GAMEPAD ANDROID WiFi v24
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+workflow_dispatch:
+push:
+branches:
+- main
 
 permissions:
-  contents: read
+contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
+steps:
+  - name: Descargar repositorio
+    uses: actions/checkout@v4
 
-      - name: Preparar Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+  - name: Preparar Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Preparar Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.11.1'
+  - name: Preparar Gradle
+    uses: gradle/actions/setup-gradle@v4
+    with:
+      gradle-version: '8.11.1'
 
-      - name: Comprobar ZIP HID v25
-        run: test -f GamepadAndroid_HID_v25_fuente.zip
+  - name: Comprobar ZIP WiFi v24
+    run: test -f GamepadAndroid_HID_v24_WIFI_experimental_fuente.zip
 
-      - name: Descomprimir proyecto v25
-        run: |
-          mkdir -p proyecto
-          unzip -o GamepadAndroid_HID_v25_fuente.zip -d proyecto
+  - name: Descomprimir proyecto WiFi v24
+    run: |
+      mkdir -p proyecto
+      unzip -o GamepadAndroid_HID_v24_WIFI_experimental_fuente.zip -d proyecto
 
-      - name: Detectar proyecto Android
-        run: |
-          SETTINGS_FILE="$(find proyecto -name settings.gradle.kts -type f -print -quit)"
-          if [ -z "$SETTINGS_FILE" ]; then
-            echo "::error::No se encontró settings.gradle.kts en el ZIP v25"
-            exit 1
-          fi
+  - name: Detectar proyecto Android
+    run: |
+      SETTINGS_FILE="$(find proyecto -name settings.gradle.kts -type f -print -quit)"
 
-          PROJECT_DIR="$(dirname "$SETTINGS_FILE")"
+      if [ -z "$SETTINGS_FILE" ]; then
+        echo "::error::No se encontró settings.gradle.kts en el ZIP v24"
+        exit 1
+      fi
 
-          test -f "$PROJECT_DIR/app/build.gradle.kts"
+      PROJECT_DIR="$(dirname "$SETTINGS_FILE")"
 
-          MAIN_ACTIVITY="$(find "$PROJECT_DIR/app/src/main" -name MainActivity.kt -type f -print -quit)"
-          if [ -z "$MAIN_ACTIVITY" ]; then
-            echo "::error::No se encontró MainActivity.kt"
-            exit 1
-          fi
+      if [ ! -f "$PROJECT_DIR/app/build.gradle.kts" ]; then
+        echo "::error::No se encontró app/build.gradle.kts"
+        exit 1
+      fi
 
-          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-          echo "Proyecto detectado: $PROJECT_DIR"
-          echo "Actividad principal: $MAIN_ACTIVITY"
+      MAIN_ACTIVITY="$(find "$PROJECT_DIR/app/src/main" -name MainActivity.kt -type f -print -quit)"
 
-      - name: Compilar APK HID v25
-        run: gradle --no-daemon -p "$PROJECT_DIR" assembleDebug
+      if [ -z "$MAIN_ACTIVITY" ]; then
+        echo "::error::No se encontró MainActivity.kt"
+        exit 1
+      fi
 
-      - name: Guardar APK HID v25
-        uses: actions/upload-artifact@v4
-        with:
-          name: GAMEPAD-ANDROID-HID-v25
-          path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 14
+      echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+      echo "Proyecto detectado: $PROJECT_DIR"
+      echo "Actividad principal: $MAIN_ACTIVITY"
+
+  - name: Compilar APK WiFi v24
+    run: gradle --no-daemon -p "$PROJECT_DIR" assembleDebug
+
+  - name: Guardar APK WiFi v24
+    uses: actions/upload-artifact@v4
+    with:
+      name: GAMEPAD-ANDROID-WIFI-v24
+      path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/app-debug.apk
+      if-no-files-found: error
+      retention-days: 14
